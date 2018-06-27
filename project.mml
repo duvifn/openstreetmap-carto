@@ -1404,7 +1404,9 @@ Layer:
         (SELECT
             way,
             way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels,
-            name
+            CASE WHEN (tags -> 'name:he'  IS NULL OR tags -> 'name:he'  = '') THEN 
+                CASE WHEN ( tags->'name:en'  IS NOT NULL OR tags->'name:en'  != '' AND name NOT SIMILAR TO '%[U&\059x1-U&\05Fx5]%' AND name NOT SIMILAR TO '%[U&\0020-U&\007E]%' ) THEN tags->'name:en' ELSE name END
+            ELSE tags -> 'name:he'  END as name
           FROM planet_osm_polygon
           WHERE boundary = 'administrative'
             AND admin_level = '2'
@@ -1422,7 +1424,9 @@ Layer:
       table: |-
         (SELECT
             way,
-            name,
+            CASE WHEN (tags -> 'name:he'  IS NULL OR tags -> 'name:he'  = '') THEN 
+                CASE WHEN ( tags->'name:en'  IS NOT NULL OR tags->'name:en'  != '' AND name NOT SIMILAR TO '%[U&\059x1-U&\05Fx5]%' AND name NOT SIMILAR TO '%[U&\0020-U&\007E]%' ) THEN tags->'name:en' ELSE name END
+            ELSE tags -> 'name:he'  END as name,
             CASE
               WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER ELSE 0
             END as population,
@@ -1446,7 +1450,9 @@ Layer:
         (SELECT
             way,
             way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels,
-            name,
+            CASE WHEN (tags -> 'name:he'  IS NULL OR tags -> 'name:he'  = '') THEN 
+                CASE WHEN ( tags->'name:en'  IS NOT NULL OR tags->'name:en'  != '' AND name NOT SIMILAR TO '%[U&\059x1-U&\05Fx5]%' AND name NOT SIMILAR TO '%[U&\0020-U&\007E]%' ) THEN tags->'name:en' ELSE name END
+            ELSE tags -> 'name:he'  END as name,
             ref
           FROM planet_osm_polygon
           WHERE boundary = 'administrative'
@@ -1477,7 +1483,9 @@ Layer:
                 osm_id,
                 way,
                 place,
-                name,
+                CASE WHEN (tags -> 'name:he'  IS NULL OR tags -> 'name:he'  = '') THEN 
+                    CASE WHEN ( tags->'name:en'  IS NOT NULL OR tags->'name:en'  != '' AND name NOT SIMILAR TO '%[U&\059x1-U&\05Fx5]%' AND name NOT SIMILAR TO '%[U&\0020-U&\007E]%' ) THEN tags->'name:en' ELSE name END
+                ELSE tags -> 'name:he' END as name,
                 (
                   (CASE
                     WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER
@@ -1511,7 +1519,9 @@ Layer:
             way,
             place,
             leisure,
-            name
+            CASE WHEN (tags -> 'name:he'  IS NULL OR tags -> 'name:he'  = '') THEN 
+                CASE WHEN ( tags->'name:en'  IS NOT NULL OR tags->'name:en'  != '' AND name NOT SIMILAR TO '%[U&\059x1-U&\05Fx5]%' AND name NOT SIMILAR TO '%[U&\0020-U&\007E]%' ) THEN tags->'name:en' ELSE name END
+            ELSE tags -> 'name:he'  END as name
           FROM planet_osm_point
           WHERE place IN ('village', 'hamlet')
              AND name IS NOT NULL
